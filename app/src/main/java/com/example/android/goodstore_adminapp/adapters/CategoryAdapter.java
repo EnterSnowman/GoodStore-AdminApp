@@ -1,11 +1,14 @@
 package com.example.android.goodstore_adminapp.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.goodstore_adminapp.ProductsActivity;
 import com.example.android.goodstore_adminapp.R;
 
 import java.util.ArrayList;
@@ -16,9 +19,10 @@ import java.util.ArrayList;
 
 public class CategoryAdapter  extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
     ArrayList<String> categories;
-
-    public CategoryAdapter(ArrayList<String> categories) {
+    Context context;
+    public CategoryAdapter(ArrayList<String> categories,Context context) {
         this.categories = categories;
+        this.context = context;
     }
 
     @Override
@@ -43,6 +47,14 @@ public class CategoryAdapter  extends RecyclerView.Adapter<CategoryAdapter.Categ
         public CategoryHolder(View itemView) {
             super(itemView);
             category = (TextView) itemView.findViewById(R.id.category);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ProductsActivity.class);
+                    intent.putExtra("category",categories.get(getAdapterPosition()));
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

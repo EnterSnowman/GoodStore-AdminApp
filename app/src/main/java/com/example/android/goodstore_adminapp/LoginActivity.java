@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,7 +73,12 @@ public class LoginActivity extends AppCompatActivity {
 
                                     // ...
                                 }
-                            });
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.cancel();
+                        }
+                    });
             }
             }
         });
@@ -99,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            progressDialog.cancel();
                         }
                     });
 

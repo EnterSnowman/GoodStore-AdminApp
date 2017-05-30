@@ -45,7 +45,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         return vh;
     }
 
-    public ProductAdapter(String category, ArrayList<Product> products, Context context) {
+    public ProductAdapter(ArrayList<Product> products, Context context) {
 
         this.category = category;
         this.products = products;
