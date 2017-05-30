@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Good Store - Admin App</string>
     <string name="action_settings">Settings</string>
+    <string name="products">Products</string>
+    <string name="discounts">Discounts</string>
+    <string name="title_activity_categories">CategoriesActivity</string>
 </resources>

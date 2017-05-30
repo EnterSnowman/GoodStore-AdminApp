@@ -1,5 +1,6 @@
 package com.example.android.goodstore_adminapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabaseReference;
+    ProgressDialog progressDialog;
 
 
     @Override
@@ -45,30 +47,33 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        progressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validate())
-                mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
-                        .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d("FIREBASE", "signInWithEmail:onComplete:" + task.isSuccessful());
+                if (validate()){
+                    progressDialog.show();
+                    mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Log.d("FIREBASE", "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                if (!task.isSuccessful()) {
-                                    Log.w("FIREBASE", "signInWithEmail:failed", task.getException());
-                                    Toast.makeText(LoginActivity.this, "Auth failed",
-                                            Toast.LENGTH_SHORT).show();
+                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // the auth state listener will be notified and logic to handle the
+                                    // signed in user can be handled in the listener.
+                                    if (!task.isSuccessful()) {
+                                        Log.w("FIREBASE", "signInWithEmail:failed", task.getException());
+                                        Toast.makeText(LoginActivity.this, "Auth failed",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    // ...
                                 }
-
-                                // ...
-                            }
-                        });
+                            });
+            }
             }
         });
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -76,13 +81,17 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    progressDialog.show();
                     // User is signed in
                     mDatabaseReference.child(user.getUid()).child("role").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (!dataSnapshot.getValue(String.class).equals("admin"))
+                            if (!dataSnapshot.getValue(String.class).equals("admin")){
+                                progressDialog.cancel();
                                 firebaseAuth.signOut();
+                            }
                             else {
+                                progressDialog.cancel();
                                 startActivity(new Intent(LoginActivity.this,MainActivity.class));
                                 finish();
                             }
