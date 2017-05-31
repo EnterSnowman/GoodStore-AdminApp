@@ -33,7 +33,7 @@ public class ProductsActivity extends AppCompatActivity {
                 .child("products")
                 .child(getIntent().getStringExtra("category"));
         products=  new ArrayList<>();
-        productAdapter = new ProductAdapter(products,this);
+        productAdapter = new ProductAdapter(products,this,getIntent().getStringExtra("category"));
         recyclerView.setAdapter(productAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {

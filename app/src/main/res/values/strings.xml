@@ -4,4 +4,12 @@
     <string name="products">Products</string>
     <string name="discounts">Discounts</string>
     <string name="title_activity_categories">CategoriesActivity</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="characteristics">Characteristics</string>
+    <string name="isAvailabe">Is availvable</string>
+    <string name="new_category">New category...</string>
+    <string name="add_new_product">Add new product</string>
+    <string name="choose_category">Choose category</string>
 </resources>

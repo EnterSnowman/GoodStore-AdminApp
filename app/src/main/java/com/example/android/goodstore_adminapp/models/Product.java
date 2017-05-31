@@ -14,6 +14,16 @@ public class Product {
     String description;
     String category;
     String id;
+    String characteristics;
+    public String getCharacteristics() {
+        return characteristics;
+    }
+
+    public void setCharacteristics(String characteristics) {
+        this.characteristics = characteristics;
+    }
+
+
     public String getDescription() {
         return description;
     }

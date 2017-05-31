@@ -23,6 +23,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 
+import com.example.android.goodstore_adminapp.ProductEditorActivity;
 import com.example.android.goodstore_adminapp.R;
 import com.example.android.goodstore_adminapp.models.Product;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -45,7 +46,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         return vh;
     }
 
-    public ProductAdapter(ArrayList<Product> products, Context context) {
+    public ProductAdapter(ArrayList<Product> products, Context context,String category) {
 
         this.category = category;
         this.products = products;
@@ -70,16 +71,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         ImageView productPhoto;
         public ProductHolder(View itemView) {
             super(itemView);
-            /*itemView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, ProductActivity.class);
+                    Intent intent = new Intent(context, ProductEditorActivity.class);
                     intent.putExtra("category",category);
                     intent.putExtra("product_id",products.get(getAdapterPosition()).getId());
-                    intent.putExtra("product_name",products.get(getAdapterPosition()).getName());
+                    intent.putExtra("action","edit");
                     context.startActivity(intent);
                 }
-            });*/
+            });
             productName_tv = (TextView) itemView.findViewById(R.id.product_name);
             productPhoto = (ImageView) itemView.findViewById(R.id.product_photo);
         }
