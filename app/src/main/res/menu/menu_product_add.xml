@@ -2,9 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/confirm_add_product"
+        android:id="@+id/set_discount"
         android:orderInCategory="100"
-        android:title="Add new product"
+        android:title="Set discount"
         app:showAsAction="ifRoom"
+        android:visible="false"
+        android:icon="@drawable/sale"/>
+    <item
+        android:id="@+id/confirm_add_product"
+        android:orderInCategory="101"
+        android:title="Add new product"
+        app:showAsAction="always"
         android:icon="@drawable/check"/>
+
 </menu>

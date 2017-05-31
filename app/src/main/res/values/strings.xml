@@ -12,4 +12,7 @@
     <string name="new_category">New category...</string>
     <string name="add_new_product">Add new product</string>
     <string name="choose_category">Choose category</string>
+    <string name="update_existing_product">Update product</string>
+    <string name="input_percents">Input percents from 1 to 100</string>
+    <string name="set_discount">Set discount</string>
 </resources>

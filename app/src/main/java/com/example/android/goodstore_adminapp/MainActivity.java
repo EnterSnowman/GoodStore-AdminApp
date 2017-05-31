@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         discounts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(MainActivity.this,DiscountsActivity.class));
             }
         });
         categories.setOnClickListener(new View.OnClickListener() {

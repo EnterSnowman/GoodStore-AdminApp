@@ -1,9 +1,13 @@
 package com.example.android.goodstore_adminapp;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,7 +50,7 @@ public class ProductEditorActivity extends AppCompatActivity {
     EditText chars;
     @BindView(R.id.isAvailable)
     Switch isAvailvable;
-    DatabaseReference mDatabase;
+    DatabaseReference mDatabase,discountsDatabase;
     ArrayAdapter<String> spinnerAdapter;
     ProgressDialog progressDialog;
 
@@ -58,8 +62,8 @@ public class ProductEditorActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         progressDialog = new ProgressDialog(this);
         if (getIntent().getStringExtra("action").equals("add")) {
-            mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
             getSupportActionBar().setTitle(R.string.add_new_product);
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
             category.setVisibility(View.VISIBLE);
             final ArrayList<String> c = getIntent().getStringArrayListExtra("categories");
             c.add(getString(R.string.new_category));
@@ -82,6 +86,7 @@ public class ProductEditorActivity extends AppCompatActivity {
         }
         if (getIntent().getStringExtra("action").equals("edit")) {
             progressDialog.show();
+            discountsDatabase = FirebaseDatabase.getInstance().getReference().child("discounts");
             mDatabase = FirebaseDatabase.getInstance().getReference()
                     .child("products")
                     .child(getIntent().getStringExtra("category"))
@@ -92,6 +97,7 @@ public class ProductEditorActivity extends AppCompatActivity {
     }
 
     public void initUI() {
+        getSupportActionBar().setTitle(R.string.update_existing_product);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -119,6 +125,8 @@ public class ProductEditorActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_product_add, menu);
+        if (getIntent().getStringExtra("action").equals("edit"))
+            menu.findItem(R.id.set_discount).setVisible(true);
         return true;
     }
 
@@ -132,6 +140,41 @@ public class ProductEditorActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             onBackPressed();
+            return true;
+        }
+        if (id == R.id.set_discount){
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            final EditText edittext = new EditText(this);
+            edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+            alert.setMessage(getString(R.string.input_percents));
+            alert.setTitle(getString(R.string.set_discount));
+            alert.setView(edittext);
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    if (edittext.getText().toString().equals("")||Integer.valueOf(edittext.getText().toString())>100){
+                        Toast.makeText(ProductEditorActivity.this,"Please, input right discount value",Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        discountsDatabase.child(getIntent().getStringExtra("category")+"_"+getIntent().getStringExtra("product_id"))
+                                .setValue(Float.valueOf(edittext.getText().toString())/100.0)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(ProductEditorActivity.this,"Discount added",Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                    }
+                }
+            });
+
+            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // what ever you want to do with No option.
+                }
+            });
+
+            alert.show();
             return true;
         }
         if (id == R.id.confirm_add_product) {
